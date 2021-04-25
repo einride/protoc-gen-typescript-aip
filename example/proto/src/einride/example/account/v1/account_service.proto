@@ -1,0 +1,259 @@
+syntax = "proto3";
+
+package einride.example.account.v1;
+
+option go_package = "github.com/einride/protoc-gen-aip-typescript/example/proto/gen/go/einride/example/account/v1;exampleaccountv1";
+option java_multiple_files = true;
+option java_outer_classname = "AccountServiceProto";
+option java_package = "tech.einride.example.account.v1";
+
+import "einride/example/account/v1/tenant.proto";
+import "einride/example/account/v1/user.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+// This API represents a simple account service.
+service AccountService {
+  option (google.api.default_host) = "account-example.einride.tech";
+
+  // Get a tenant.
+  // See: https://google.aip.dev/131 (Standard methods: Get).
+  rpc GetTenant(GetTenantRequest) returns (Tenant) {
+    option (google.api.http) = {
+      get: "/v1/{name=tenants/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // List tenants.
+  // See: https://google.aip.dev/132 (Standard methods: List).
+  rpc ListTenants(ListTenantsRequest) returns (ListTenantsResponse) {
+    option (google.api.http) = {
+      get: "/v1/tenants"
+    };
+  }
+
+  // Create a tenant.
+  // See: https://google.aip.dev/133 (Standard methods: Create).
+  rpc CreateTenant(CreateTenantRequest) returns (Tenant) {
+    option (google.api.http) = {
+      post: "/v1/tenants"
+      body: "tenant"
+    };
+    option (google.api.method_signature) = "tenant";
+  }
+
+  // Update a tenant.
+  // See: https://google.aip.dev/134 (Standard methods: Update).
+  rpc UpdateTenant(UpdateTenantRequest) returns (Tenant) {
+    option (google.api.http) = {
+      patch: "/v1/{tenant.name=tenants/*}"
+      body: "tenant"
+    };
+    option (google.api.method_signature) = "tenant,update_mask";
+  }
+
+  // Delete a tenant.
+  // See: https://google.aip.dev/135 (Standard methods: Delete).
+  // See: https://google.aip.dev/164 (Soft delete).
+  rpc DeleteTenant(DeleteTenantRequest) returns (Tenant) {
+    option (google.api.http) = {
+      delete: "/v1/{name=tenants/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // Get a user.
+  // See: https://google.aip.dev/131 (Standard methods: Get).
+  rpc GetUser(GetUserRequest) returns (User) {
+    option (google.api.http) = {
+      get: "/v1/{name=tenants/*/users/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // List users for a tenant.
+  // See: https://google.aip.dev/132 (Standard methods: List).
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=tenants/*}/users"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+
+  // Create a user.
+  // See: https://google.aip.dev/133 (Standard methods: Create).
+  rpc CreateUser(CreateUserRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/v1/{parent=tenants/*}/users"
+      body: "user"
+    };
+    option (google.api.method_signature) = "parent,user";
+  }
+
+  // Update a user.
+  // See: https://google.aip.dev/134 (Standard methods: Update).
+  rpc UpdateUser(UpdateUserRequest) returns (User) {
+    option (google.api.http) = {
+      patch: "/v1/{user.name=tenants/*/users/*}"
+      body: "user"
+    };
+    option (google.api.method_signature) = "user,update_mask";
+  }
+
+  // Delete a user.
+  // See: https://google.aip.dev/135 (Standard methods: Delete).
+  // See: https://google.aip.dev/164 (Soft delete).
+  rpc DeleteUser(DeleteUserRequest) returns (User) {
+    option (google.api.http) = {
+      delete: "/v1/{name=tenants/*/users/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+}
+
+// Request message for AccountService.GetTenant.
+message GetTenantRequest {
+  // The resource name of the tenant to retrieve.
+  // Format: tenants/{tenant}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference).type = "account-example.einride.tech/Tenant"
+  ];
+}
+
+// Request message for AccountService.ListTenants.
+message ListTenantsRequest {
+  // Requested page size. Server may return fewer tenants than requested.
+  // If unspecified, server will pick an appropriate default.
+  int32 page_size = 1;
+
+  // A token identifying a page of results the server should return.
+  // Typically, this is the value of
+  // [ListTenantsResponse.next_page_token][einride.example.account.v1.ListTenantsResponse.next_page_token]
+  // returned from the previous call to `ListTenants` method.
+  string page_token = 2;
+}
+
+// Response message for AccountService.ListTenants.
+message ListTenantsResponse {
+  // The list of tenants.
+  repeated Tenant tenants = 1;
+
+  // A token to retrieve next page of results.  Pass this value in the
+  // [ListTenantsRequest.page_token][einride.example.account.v1.ListTenantsRequest.page_token]
+  // field in the subsequent call to `ListTenants` method to retrieve the next
+  // page of results.
+  string next_page_token = 2;
+}
+
+// Request message for AccountService.CreateTenant.
+message CreateTenantRequest {
+  // The tenant to create.
+  Tenant tenant = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for AccountService.UpdateTenant.
+message UpdateTenantRequest {
+  // The tenant to update with. The name must match or be empty.
+  // The tenant's `name` field is used to identify the tenant to be updated.
+  // Format: tenants/{tenant}
+  Tenant tenant = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The list of fields to be updated.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// Request message for AccountService.DeleteTenant.
+message DeleteTenantRequest {
+  // The resource name of the tenant to delete.
+  // Format: tenants/{tenant}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference).type = "account-example.einride.tech/Tenant"
+  ];
+}
+
+// Request message for AccountService.GetUser.
+message GetUserRequest {
+  // The resource name of the user to retrieve.
+  // Format: tenants/{tenant}/users/{user}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference).type = "account-example.einride.tech/User"
+  ];
+}
+
+// Request message for AccountService.ListUsers.
+message ListUsersRequest {
+  // The resource name of the parent, which owns this collection of users.
+  // Format: tenants/{tenant}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type: "account-example.einride.tech/Tenant"
+      child_type: "account-example.einride.tech/User"
+    }
+  ];
+
+  // Requested page size. Server may return fewer users than requested.
+  // If unspecified, server will pick an appropriate default.
+  int32 page_size = 2;
+
+  // A token identifying a page of results the server should return.
+  // Typically, this is the value of
+  // [ListUsersResponse.next_page_token][einride.example.account.v1.ListUsersResponse.next_page_token]
+  // returned from the previous call to `ListUsers` method.
+  string page_token = 3;
+}
+
+// Response message for AccountService.ListUsers.
+message ListUsersResponse {
+  // The list of users.
+  repeated User users = 1;
+
+  // A token to retrieve next page of results.  Pass this value in the
+  // [ListUsersRequest.page_token][einride.example.account.v1.ListUsersRequest.page_token]
+  // field in the subsequent call to `ListUsers` method to retrieve the next
+  // page of results.
+  string next_page_token = 2;
+}
+
+// Request message for AccountService.CreateUser.
+message CreateUserRequest {
+  // The resource name of the parent tenant for which this user will be created.
+  // Format: tenants/{tenant}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type: "account-example.einride.tech/Tenant"
+    }
+  ];
+  // The user to create.
+  User user = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for AccountService.UpdateUser.
+message UpdateUserRequest {
+  // The user to update with. The name must match or be empty.
+  // The user's `name` field is used to identify the user to be updated.
+  // Format: tenants/{tenant}/users/{user}
+  User user = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The list of fields to be updated.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// Request message for AccountService.DeleteUser.
+message DeleteUserRequest {
+  // The resource name of the user to delete.
+  // Format: tenants/{tenant}/users/{user}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference).type = "account-example.einride.tech/User"
+  ];
+}

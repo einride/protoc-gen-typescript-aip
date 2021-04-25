@@ -1,0 +1,6 @@
+version: v1beta1
+
+plugins:
+  - name: aip-typescript
+    out: example/proto/gen/typescript
+    strategy: all

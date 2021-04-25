@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package einride.example.account.v1;
+
+option go_package = "github.com/einride/protoc-gen-aip-typescript/example/proto/gen/go/einride/example/account/v1;exampleaccountv1";
+option java_multiple_files = true;
+option java_outer_classname = "TenantProto";
+option java_package = "tech.einride.example.account.v1";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/timestamp.proto";
+
+// A tenant represents an organization.
+message Tenant {
+  option (google.api.resource) = {
+    type: "account-example.einride.tech/Tenant"
+    pattern: "tenants/{tenant}"
+    singular: "tenant"
+    plural: "tenants"
+  };
+
+  // The resource name of the tenant.
+  string name = 1;
+
+  // The creation timestamp of the resource.
+  google.protobuf.Timestamp create_time = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The last update timestamp of the resource.
+  //
+  // Updated when create/update/delete operation is performed.
+  google.protobuf.Timestamp update_time = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The deletion timestamp of the resource.
+  google.protobuf.Timestamp delete_time = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The display name of the tenant.
+  string display_name = 5 [(google.api.field_behavior) = REQUIRED];
+
+  // The labels on the tenant.
+  map<string,string> labels = 6;
+}
