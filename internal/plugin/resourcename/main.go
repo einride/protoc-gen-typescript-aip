@@ -21,17 +21,17 @@ func GeneratePackage(
 	pkg := path.Dir(resources[0].ParentFile)
 
 	// keep track of what resource names have been generated in the package
-	seen := make(map[aipreflect.ResourceTypeName]struct{})
+	seen := make(map[string]struct{})
 	queue := resources
 
 	for len(queue) > 0 {
 		resource := queue[0]
 		queue = queue[1:]
 
-		if _, ok := seen[resource.Type]; ok {
+		if _, ok := seen[resource.Type.Type()]; ok {
 			continue
 		}
-		seen[resource.Type] = struct{}{}
+		seen[resource.Type.Type()] = struct{}{}
 
 		// no support for multiple resource name definitions
 		name := resource.Names[0]
