@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/einride/protoc-gen-aip-typescript/internal/plugin"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/pluginpb"
 )
@@ -26,8 +27,11 @@ func run() error {
 	if err := proto.Unmarshal(in, req); err != nil {
 		return err
 	}
-	var resp pluginpb.CodeGeneratorResponse
-	out, err := proto.Marshal(&resp)
+	resp, err := plugin.Generate(req)
+	if err != nil {
+		return err
+	}
+	out, err := proto.Marshal(resp)
 	if err != nil {
 		return err
 	}
