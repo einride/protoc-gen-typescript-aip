@@ -83,6 +83,5 @@ console.log(name.toString())    // "tenants/tenant/users/user"
 ```
 
 [aip]: https://aip.dev
-[releases]: ./releases
-[examples]: ./examples
+[releases]: https://github.com/einride/protoc-gen-typescript-aip/releases
 [resource-descriptor]: https://github.com/googleapis/googleapis/blob/master/google/api/resource.proto
