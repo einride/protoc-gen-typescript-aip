@@ -1,4 +1,4 @@
-module github.com/einride/protoc-gen-aip-typescript
+module github.com/einride/protoc-gen-typescript-aip
 
 go 1.16
 
