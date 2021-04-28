@@ -11,9 +11,9 @@ type File struct {
 
 func (f *File) P(v ...interface{}) {
 	for _, x := range v {
-		fmt.Fprint(&f.buf, x)
+		_, _ = fmt.Fprint(&f.buf, x)
 	}
-	fmt.Fprintln(&f.buf)
+	_, _ = fmt.Fprintln(&f.buf)
 }
 
 func (f *File) Content() []byte {
