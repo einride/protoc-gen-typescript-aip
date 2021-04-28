@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package einride.example.todo.v1;
+
+option go_package = "github.com/einride/protoc-gen-aip-typescript/example/proto/gen/go/einride/example/todo/v1;exampletodov1";
+option java_multiple_files = true;
+option java_outer_classname = "TodoServiceProto";
+option java_package = "tech.einride.example.todo.v1";
+
+import "einride/example/todo/v1/todo.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+// This API represents a simple todo service.
+service TodoService {
+  option (google.api.default_host) = "todo-example.einride.tech";
+
+  // Get a todo.
+  // See: https://google.aip.dev/131 (Standard methods: Get).
+  rpc GetTodo(GetTodoRequest) returns (Todo) {
+    option (google.api.http) = {
+      get: "/v1/{name=tenants/*/users/*/todo/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+
+  // List todos.
+  // See: https://google.aip.dev/132 (Standard methods: List).
+  rpc ListTodos(ListTodosRequest) returns (ListTodosResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=tenants/*/users/*}/todos"
+    };
+  }
+
+  // Create a todo.
+  // See: https://google.aip.dev/133 (Standard methods: Create).
+  rpc CreateTodo(CreateTodoRequest) returns (Todo) {
+    option (google.api.http) = {
+      post: "/v1/{parent=tenants/*/users/*}"
+      body: "todo"
+    };
+    option (google.api.method_signature) = "todo";
+  }
+
+  // Update a todo.
+  // See: https://google.aip.dev/134 (Standard methods: Update).
+  rpc UpdateTodo(UpdateTodoRequest) returns (Todo) {
+    option (google.api.http) = {
+      patch: "/v1/{todo.name=tenants/*/users/*/todos/*}"
+      body: "todo"
+    };
+    option (google.api.method_signature) = "todo,update_mask";
+  }
+
+}
+
+// Request message for TodoService.GetTodo.
+message GetTodoRequest {
+  // The resource name of the todo to retrieve.
+  // Format: tenants/{tenant}/users/{user}/todos/{todo}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference).type = "todo-example.einride.tech/Todo"
+  ];
+}
+
+// Request message for TodoService.ListTodos.
+message ListTodosRequest {
+  // Requested page size. Server may return fewer todos than requested.
+  // If unspecified, server will pick an appropriate default.
+  int32 page_size = 1;
+
+  // A token identifying a page of results the server should return.
+  // Typically, this is the value of
+  // [ListTodosResponse.next_page_token][einride.example.todo.v1.ListTodosResponse.next_page_token]
+  // returned from the previous call to `ListTodos` method.
+  string page_token = 2;
+}
+
+// Response message for TodoService.ListTodos.
+message ListTodosResponse {
+  // The list of todos.
+  repeated Todo todos = 1;
+
+  // A token to retrieve next page of results.  Pass this value in the
+  // [ListTodosRequest.page_token][einride.example.todo.v1.ListTodosRequest.page_token]
+  // field in the subsequent call to `ListTodos` method to retrieve the next
+  // page of results.
+  string next_page_token = 2;
+}
+
+// Request message for TodoService.CreateTodo.
+message CreateTodoRequest {
+  // The todo to create.
+  Todo todo = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for TodoService.UpdateTodo.
+message UpdateTodoRequest {
+  // The todo to update with. The name must match or be empty.
+  // The todo's `name` field is used to identify the todo to be updated.
+  // Format: tenants/{tenant}/users/{user}/todos/{todo}
+  Todo todo = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // The list of fields to be updated.
+  google.protobuf.FieldMask update_mask = 2;
+}
