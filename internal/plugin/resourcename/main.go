@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/einride/protoc-gen-aip-typescript/internal/codegen"
+	"github.com/einride/protoc-gen-typescript-aip/internal/codegen"
 	"go.einride.tech/aip/reflect/aipreflect"
 	"go.einride.tech/aip/reflect/aipregistry"
 )

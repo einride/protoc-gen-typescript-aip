@@ -5,8 +5,8 @@ import (
 	"path"
 	"sort"
 
-	"github.com/einride/protoc-gen-aip-typescript/internal/codegen"
-	"github.com/einride/protoc-gen-aip-typescript/internal/plugin/resourcename"
+	"github.com/einride/protoc-gen-typescript-aip/internal/codegen"
+	"github.com/einride/protoc-gen-typescript-aip/internal/plugin/resourcename"
 	"go.einride.tech/aip/reflect/aipreflect"
 	"go.einride.tech/aip/reflect/aipregistry"
 	"google.golang.org/protobuf/proto"
