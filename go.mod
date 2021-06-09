@@ -4,6 +4,6 @@ go 1.16
 
 require (
 	github.com/stoewer/go-strcase v1.2.0
-	go.einride.tech/aip v0.39.0
+	go.einride.tech/aip v0.40.0
 	google.golang.org/protobuf v1.26.0
 )
