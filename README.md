@@ -1,6 +1,6 @@
 # protoc-gen-typescript-aip
 
-Generates Typescript helpers for gRPC APIs conforming to [AIP][aip].
+Generates Typescript helpers for Protobuf APIs conforming to [AIP][aip].
 
 ### Install the plugin
 
