@@ -1,7 +1,8 @@
 module.exports = {
   extends: ["plugin:@einride/default"],
-    rules: {
+  rules: {
     "jest/no-deprecated-functions": 0,
     "prettier/prettier": 0,
+    "prefer-template": 0,
   },
 };
