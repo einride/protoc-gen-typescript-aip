@@ -56,7 +56,7 @@ export const TodoResourceName: TodoResourceNameConstructor = {
         return TenantResourceName.from(tenant)
       },
       toString(): string {
-        // eslint-disable-next-line no-useless-concat
+        // eslint-disable-next-line no-useless-concat, prefer-template
         return "tenants" + "/" + tenant + "/" + "users" + "/" + user + "/" + "todos" + "/" + todo
       },
     }
@@ -108,7 +108,7 @@ const UserResourceName: UserResourceNameConstructor = {
         return TenantResourceName.from(tenant)
       },
       toString(): string {
-        // eslint-disable-next-line no-useless-concat
+        // eslint-disable-next-line no-useless-concat, prefer-template
         return "tenants" + "/" + tenant + "/" + "users" + "/" + user
       },
     }
@@ -147,7 +147,7 @@ const TenantResourceName: TenantResourceNameConstructor = {
     return {
       tenant,
       toString(): string {
-        // eslint-disable-next-line no-useless-concat
+        // eslint-disable-next-line no-useless-concat, prefer-template
         return "tenants" + "/" + tenant
       },
     }
