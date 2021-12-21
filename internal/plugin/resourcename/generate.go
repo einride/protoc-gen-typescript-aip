@@ -129,7 +129,7 @@ func (r resourceName) generateConstructorFrom(f *codegen.File, indent int) {
 		}
 	}
 	f.P(t(indent+2), "toString(): string {")
-	f.P(t(indent+3), "// eslint-disable-next-line no-useless-concat")
+	f.P(t(indent+3), "// eslint-disable-next-line no-useless-concat, prefer-template")
 	f.P(t(indent+3), "return ", strings.Join(toStringParts, " + \"/\" + "))
 	f.P(t(indent+2), "},")
 	f.P(t(indent+1), "}")
