@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/einride/protoc-gen-typescript-aip/internal/codegen"
 	"go.einride.tech/aip/reflect/aipreflect"
+	"go.einride.tech/protoc-gen-typescript-aip/internal/codegen"
 )
 
 type resourceName struct {

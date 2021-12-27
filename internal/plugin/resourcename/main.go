@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/einride/protoc-gen-typescript-aip/internal/codegen"
 	"go.einride.tech/aip/reflect/aipreflect"
 	"go.einride.tech/aip/reflect/aipregistry"
+	"go.einride.tech/protoc-gen-typescript-aip/internal/codegen"
 )
 
 func GeneratePackage(

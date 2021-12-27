@@ -5,7 +5,7 @@ Generates Typescript helpers for Protobuf APIs conforming to [AIP][aip].
 ### Install the plugin
 
 ```bash
-go get github.com/einride/protoc-gen-typescript-aip
+go get go.einride.tech/protoc-gen-typescript-aip
 ```
 
 Or download a prebuilt binary from [releases][releases].

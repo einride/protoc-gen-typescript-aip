@@ -5,10 +5,10 @@ import (
 	"path"
 	"sort"
 
-	"github.com/einride/protoc-gen-typescript-aip/internal/codegen"
-	"github.com/einride/protoc-gen-typescript-aip/internal/plugin/resourcename"
 	"go.einride.tech/aip/reflect/aipreflect"
 	"go.einride.tech/aip/reflect/aipregistry"
+	"go.einride.tech/protoc-gen-typescript-aip/internal/codegen"
+	"go.einride.tech/protoc-gen-typescript-aip/internal/plugin/resourcename"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/types/descriptorpb"
