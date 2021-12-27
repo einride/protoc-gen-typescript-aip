@@ -2,18 +2,12 @@ syntax = "proto3";
 
 package einride.example.todo.v1;
 
-option go_package = "go.einride.tech/protoc-gen-typescript-aip/example/proto/gen/go/einride/example/todo/v1;exampletodov1";
-option java_multiple_files = true;
-option java_outer_classname = "TodoServiceProto";
-option java_package = "tech.einride.example.todo.v1";
-
 import "einride/example/todo/v1/todo.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "google/protobuf/field_mask.proto";
-import "google/protobuf/timestamp.proto";
 
 // This API represents a simple todo service.
 service TodoService {
@@ -55,7 +49,6 @@ service TodoService {
     };
     option (google.api.method_signature) = "todo,update_mask";
   }
-
 }
 
 // Request message for TodoService.GetTodo.

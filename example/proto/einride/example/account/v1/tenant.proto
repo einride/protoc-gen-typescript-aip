@@ -1,27 +1,21 @@
 syntax = "proto3";
 
-package einride.example.todo.v1;
+package einride.example.account.v1;
 
-option go_package = "go.einride.tech/protoc-gen-typescript-aip/example/proto/gen/go/einride/example/todo/v1;exampletodov1";
-option java_multiple_files = true;
-option java_outer_classname = "TodoProto";
-option java_package = "tech.einride.example.todo.v1";
-
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "google/protobuf/timestamp.proto";
 
-// A todo is owned by a user
-message Todo {
+// A tenant represents an organization.
+message Tenant {
   option (google.api.resource) = {
-    type: "todo-example.einride.tech/Todo"
-    pattern: "tenants/{tenant}/users/{user}/todos/{todo}"
-    singular: "todo"
-    plural: "todos"
+    type: "account-example.einride.tech/Tenant"
+    pattern: "tenants/{tenant}"
+    singular: "tenant"
+    plural: "tenants"
   };
 
-  // The resource name of the todo.
+  // The resource name of the tenant.
   string name = 1;
 
   // The creation timestamp of the resource.
@@ -35,12 +29,9 @@ message Todo {
   // The deletion timestamp of the resource.
   google.protobuf.Timestamp delete_time = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
 
-  // The display name of the todo.
+  // The display name of the tenant.
   string display_name = 5 [(google.api.field_behavior) = REQUIRED];
 
-  // The display name of the todo.
-  string description = 6;
-
-  // The labels on the todo.
-  map<string,string> labels = 7;
+  // The labels on the tenant.
+  map<string, string> labels = 6;
 }

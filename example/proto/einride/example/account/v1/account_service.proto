@@ -2,11 +2,6 @@ syntax = "proto3";
 
 package einride.example.account.v1;
 
-option go_package = "go.einride.tech/protoc-gen-typescript-aip/example/proto/gen/go/einride/example/account/v1;exampleaccountv1";
-option java_multiple_files = true;
-option java_outer_classname = "AccountServiceProto";
-option java_package = "tech.einride.example.account.v1";
-
 import "einride/example/account/v1/tenant.proto";
 import "einride/example/account/v1/user.proto";
 import "google/api/annotations.proto";
@@ -14,7 +9,6 @@ import "google/api/client.proto";
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "google/protobuf/field_mask.proto";
-import "google/protobuf/timestamp.proto";
 
 // This API represents a simple account service.
 service AccountService {
