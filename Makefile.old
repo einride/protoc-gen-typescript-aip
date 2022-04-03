@@ -11,7 +11,3 @@ include tools/eslint/rules.mk
 example/proto:
 	@make -C $@
 
-.PHONY: $(eslint)
-eslint: $(eslint)
-	$(info [$@] linting typescript files...)
-	$(eslint) --config $(eslint_cwd)/.eslintrc.js --quiet "example/proto/gen/typescript/**/*.ts"

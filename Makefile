@@ -56,3 +56,7 @@ go-review: $(sagefile)
 .PHONY: go-test
 go-test: $(sagefile)
 	@$(sagefile) GoTest
+
+.PHONY: typescript-lint
+typescript-lint: $(sagefile)
+	@$(sagefile) TypescriptLint

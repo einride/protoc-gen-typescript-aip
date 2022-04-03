@@ -23,7 +23,7 @@ func main() {
 }
 
 func All(ctx context.Context) error {
-	sg.Deps(ctx, ConvcoCheck, GoLint, GoReview, GoTest, FormatMarkdown, FormatYAML)
+	sg.Deps(ctx, ConvcoCheck, GoLint, GoReview, GoTest, FormatMarkdown, FormatYAML, TypescriptLint)
 	sg.SerialDeps(ctx, GoModTidy, GitVerifyNoDiff)
 	return nil
 }
@@ -66,4 +66,15 @@ func ConvcoCheck(ctx context.Context) error {
 func GitVerifyNoDiff(ctx context.Context) error {
 	sg.Logger(ctx).Println("verifying that git has no diff...")
 	return sggit.VerifyNoDiff(ctx)
+}
+
+func TypescriptLint(ctx context.Context) error {
+	sg.Logger(ctx).Println("linting typescript files...")
+	return eslintCommand(
+		ctx,
+		"--config",
+		sg.FromGitRoot(".eslintrc.js"),
+		"--quiet",
+		"example/proto/gen/typescript/**/*.ts",
+	).Run()
 }
