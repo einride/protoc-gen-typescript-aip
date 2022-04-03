@@ -19,11 +19,17 @@ func main() {
 			Path:          sg.FromGitRoot("Makefile"),
 			DefaultTarget: All,
 		},
+		sg.Makefile{
+			Namespace:     Proto{},
+			DefaultTarget: Proto.All,
+			Path:          sg.FromGitRoot("example", "proto", "Makefile"),
+		},
 	)
 }
 
 func All(ctx context.Context) error {
-	sg.Deps(ctx, ConvcoCheck, GoLint, GoReview, GoTest, FormatMarkdown, FormatYAML, TypescriptLint)
+	sg.Deps(ctx, ConvcoCheck, GoLint, GoReview, GoTest, FormatMarkdown, FormatYAML)
+	sg.SerialDeps(ctx, Proto.All, TypescriptLint)
 	sg.SerialDeps(ctx, GoModTidy, GitVerifyNoDiff)
 	return nil
 }
