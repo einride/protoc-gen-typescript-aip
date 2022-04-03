@@ -1,6 +1,7 @@
-# protoc-gen-typescript-aip
+protoc-gen-typescript-aip
+=========================
 
-Generates Typescript helpers for Protobuf APIs conforming to [AIP][aip].
+Generates Typescript helpers for Protobuf APIs conforming to [AIP](https://aip.dev).
 
 ### Install the plugin
 
@@ -8,11 +9,12 @@ Generates Typescript helpers for Protobuf APIs conforming to [AIP][aip].
 go get go.einride.tech/protoc-gen-typescript-aip
 ```
 
-Or download a prebuilt binary from [releases][releases].
+Or download a prebuilt binary from [releases](https://github.com/einride/protoc-gen-typescript-aip/releases).
 
 ### Invocation
 
 #### protoc
+
 ```bash
 protoc 
   --typescript-aip_out [OUTPUT DIR] \
@@ -20,6 +22,7 @@ protoc
 ```
 
 #### buf
+
 ```yaml
 plugins:
   - name: typescript-aip
@@ -40,16 +43,17 @@ insertion_point         If non-empty, indicates that the named file should alrea
 
 ---
 
-## Features
+Features
+--------
 
 ### Resource names
 
-Generates helpers for working with resource names, based on [ResourceDescriptor][resource-descriptor] annotations.
-
+Generates helpers for working with resource names, based on [ResourceDescriptor](https://github.com/googleapis/googleapis/blob/master/google/api/resource.proto) annotations.
 
 #### Example
 
 A resource annotated with
+
 ```proto
 option (google.api.resource) = {
   type: "account-example.einride.tech/User"
@@ -60,6 +64,7 @@ option (google.api.resource) = {
 ```
 
 generates the following API
+
 ```ts
 // Parsing a string:
 const name = UserResourceName.parse("tenants/1/users/2")
@@ -81,7 +86,3 @@ console.log(name.tenant)        // "tenant"
 console.log(name.user)          // "user"
 console.log(name.toString())    // "tenants/tenant/users/user"
 ```
-
-[aip]: https://aip.dev
-[releases]: https://github.com/einride/protoc-gen-typescript-aip/releases
-[resource-descriptor]: https://github.com/googleapis/googleapis/blob/master/google/api/resource.proto
