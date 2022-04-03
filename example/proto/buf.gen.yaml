@@ -4,4 +4,3 @@ plugins:
   - name: typescript-aip
     out: gen/typescript
     strategy: all
-    path: .build/protoc-gen-typescript-aip

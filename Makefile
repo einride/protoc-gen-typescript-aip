@@ -60,3 +60,7 @@ go-test: $(sagefile)
 .PHONY: typescript-lint
 typescript-lint: $(sagefile)
 	@$(sagefile) TypescriptLint
+
+.PHONY: proto
+proto:
+	$(MAKE) -C example/proto -f Makefile
