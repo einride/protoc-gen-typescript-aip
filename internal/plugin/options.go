@@ -51,7 +51,7 @@ func (o *Options) Unmarshal(s *string) error {
 			o.InsertionPoint = value
 		case "filename":
 			o.Filename = value
-		case "":
+		case "exclude_resource_definitions":
 			b, err := unmarshalBool(value)
 			if err != nil {
 				return fmt.Errorf("unmarshal exclude_resource_definitions: %w", err)
