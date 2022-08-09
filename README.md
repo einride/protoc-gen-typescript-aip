@@ -39,6 +39,10 @@ filename                Name of the file to generate the code to.
 insertion_point         If non-empty, indicates that the named file should already exist,
                         and the content here is to be inserted into that file at a defined 
                         insertion point. 
+
+skip_file_resource_definitions
+                        If set to true, resource names will not be generated for resource definitions
+                        in the file scope. Default: false.
 ```
 
 ---

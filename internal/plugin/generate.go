@@ -42,6 +42,9 @@ func Generate(request *pluginpb.CodeGeneratorRequest) (*pluginpb.CodeGeneratorRe
 		if _, ok := generate[descriptor.ParentFile]; !ok {
 			return true
 		}
+		if opts.SkipFileResourceDefinitions && !isMessageResourceDescriptor(descriptor) {
+			return true
+		}
 		dir := path.Dir(descriptor.ParentFile)
 		packageResources[dir] = append(packageResources[dir], descriptor)
 		return true
@@ -66,4 +69,8 @@ func Generate(request *pluginpb.CodeGeneratorRequest) (*pluginpb.CodeGeneratorRe
 	}
 
 	return &response, nil
+}
+
+func isMessageResourceDescriptor(r *aipreflect.ResourceDescriptor) bool {
+	return r.Message != ""
 }
