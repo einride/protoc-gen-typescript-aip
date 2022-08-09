@@ -15,10 +15,10 @@ type Options struct {
 	// Defaults to `""` (ie. no insertion point)
 	InsertionPoint string
 
-	// SkipFileResourceDefinitions disables generation of resource names
-	// declared in the file scope.
+	// ExcludeResourceDefinitions disables generation of resource names
+	// based on resource definitions in the file.
 	// Defaults to false.
-	SkipFileResourceDefinitions bool
+	ExcludeResourceDefinitions bool
 }
 
 func defaultOptions() Options {
@@ -51,12 +51,12 @@ func (o *Options) Unmarshal(s *string) error {
 			o.InsertionPoint = value
 		case "filename":
 			o.Filename = value
-		case "skip_file_resource_definitions":
+		case "":
 			b, err := unmarshalBool(value)
 			if err != nil {
-				return fmt.Errorf("unmarshal skip_file_resource_definitions: %w", err)
+				return fmt.Errorf("unmarshal exclude_resource_definitions: %w", err)
 			}
-			o.SkipFileResourceDefinitions = b
+			o.ExcludeResourceDefinitions = b
 		default:
 			return fmt.Errorf("unknown option [%s]", opt)
 		}
