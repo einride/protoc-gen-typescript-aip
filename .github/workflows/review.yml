@@ -2,7 +2,8 @@ name: review
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    branches:
+      - "*"
 
 jobs:
   make:
@@ -10,6 +11,18 @@ jobs:
     steps:
       - name: Setup Sage
         uses: einride/sage/actions/setup@master
+        with:
+          go-version: 1.19
 
       - name: Make
         run: make
+
+      - name: Dry-run semantic-release
+        run: make semantic-release repo=${{ github.repository }} dry=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dry-run GoReleaser
+        run: make go-releaser snapshot=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

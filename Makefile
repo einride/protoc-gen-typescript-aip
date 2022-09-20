@@ -4,13 +4,14 @@
 .DEFAULT_GOAL := all
 
 cwd := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
-sagefile := $(cwd)/.sage/bin/sagefile
+sagefile := $(abspath $(cwd)/.sage/bin/sagefile)
 
 # Setup Go.
 go := $(shell command -v go 2>/dev/null)
+export GOWORK ?= off
 ifndef go
 SAGE_GO_VERSION ?= 1.18.4
-export GOROOT := $(cwd)/.sage/tools/go/$(SAGE_GO_VERSION)/go
+export GOROOT := $(abspath $(cwd)/.sage/tools/go/$(SAGE_GO_VERSION)/go)
 export PATH := $(PATH):$(GOROOT)/bin
 go := $(GOROOT)/bin/go
 os := $(shell uname | tr '[:upper:]' '[:lower:]')
@@ -70,6 +71,13 @@ go-lint: $(sagefile)
 go-mod-tidy: $(sagefile)
 	@$(sagefile) GoModTidy
 
+.PHONY: go-releaser
+go-releaser: $(sagefile)
+ifndef snapshot
+	 $(error missing argument snapshot="...")
+endif
+	@$(sagefile) GoReleaser "$(snapshot)"
+
 .PHONY: go-review
 go-review: $(sagefile)
 	@$(sagefile) GoReview
@@ -77,6 +85,16 @@ go-review: $(sagefile)
 .PHONY: go-test
 go-test: $(sagefile)
 	@$(sagefile) GoTest
+
+.PHONY: semantic-release
+semantic-release: $(sagefile)
+ifndef repo
+	 $(error missing argument repo="...")
+endif
+ifndef dry
+	 $(error missing argument dry="...")
+endif
+	@$(sagefile) SemanticRelease "$(repo)" "$(dry)"
 
 .PHONY: typescript-lint
 typescript-lint: $(sagefile)

@@ -1,6 +1,6 @@
 module go.einride.tech/protoc-gen-typescript-aip
 
-go 1.17
+go 1.19
 
 require (
 	github.com/stoewer/go-strcase v1.2.0
