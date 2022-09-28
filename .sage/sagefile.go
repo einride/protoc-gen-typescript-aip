@@ -105,6 +105,9 @@ func SemanticRelease(ctx context.Context, repo string, dry bool) error {
 
 func GoReleaser(ctx context.Context, snapshot bool) error {
 	sg.Logger(ctx).Println("building Go binary releases...")
+	if err := sggit.Command(ctx, "fetch", "--force", "--tags").Run(); err != nil {
+		return err
+	}
 	args := []string{
 		"release",
 		"--rm-dist",
