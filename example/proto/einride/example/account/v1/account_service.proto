@@ -17,18 +17,14 @@ service AccountService {
   // Get a tenant.
   // See: https://google.aip.dev/131 (Standard methods: Get).
   rpc GetTenant(GetTenantRequest) returns (Tenant) {
-    option (google.api.http) = {
-      get: "/v1/{name=tenants/*}"
-    };
+    option (google.api.http) = {get: "/v1/{name=tenants/*}"};
     option (google.api.method_signature) = "name";
   }
 
   // List tenants.
   // See: https://google.aip.dev/132 (Standard methods: List).
   rpc ListTenants(ListTenantsRequest) returns (ListTenantsResponse) {
-    option (google.api.http) = {
-      get: "/v1/tenants"
-    };
+    option (google.api.http) = {get: "/v1/tenants"};
   }
 
   // Create a tenant.
@@ -55,27 +51,21 @@ service AccountService {
   // See: https://google.aip.dev/135 (Standard methods: Delete).
   // See: https://google.aip.dev/164 (Soft delete).
   rpc DeleteTenant(DeleteTenantRequest) returns (Tenant) {
-    option (google.api.http) = {
-      delete: "/v1/{name=tenants/*}"
-    };
+    option (google.api.http) = {delete: "/v1/{name=tenants/*}"};
     option (google.api.method_signature) = "name";
   }
 
   // Get a user.
   // See: https://google.aip.dev/131 (Standard methods: Get).
   rpc GetUser(GetUserRequest) returns (User) {
-    option (google.api.http) = {
-      get: "/v1/{name=tenants/*/users/*}"
-    };
+    option (google.api.http) = {get: "/v1/{name=tenants/*/users/*}"};
     option (google.api.method_signature) = "name";
   }
 
   // List users for a tenant.
   // See: https://google.aip.dev/132 (Standard methods: List).
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
-    option (google.api.http) = {
-      get: "/v1/{parent=tenants/*}/users"
-    };
+    option (google.api.http) = {get: "/v1/{parent=tenants/*}/users"};
     option (google.api.method_signature) = "parent";
   }
 
@@ -103,9 +93,7 @@ service AccountService {
   // See: https://google.aip.dev/135 (Standard methods: Delete).
   // See: https://google.aip.dev/164 (Soft delete).
   rpc DeleteUser(DeleteUserRequest) returns (User) {
-    option (google.api.http) = {
-      delete: "/v1/{name=tenants/*/users/*}"
-    };
+    option (google.api.http) = {delete: "/v1/{name=tenants/*/users/*}"};
     option (google.api.method_signature) = "name";
   }
 }
@@ -223,9 +211,7 @@ message CreateUserRequest {
   // Format: tenants/{tenant}
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = {
-      child_type: "account-example.einride.tech/Tenant"
-    }
+    (google.api.resource_reference) = {child_type: "account-example.einride.tech/Tenant"}
   ];
   // The user to create.
   User user = 2 [(google.api.field_behavior) = REQUIRED];
