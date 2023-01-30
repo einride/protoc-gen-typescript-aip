@@ -16,18 +16,14 @@ service TodoService {
   // Get a todo.
   // See: https://google.aip.dev/131 (Standard methods: Get).
   rpc GetTodo(GetTodoRequest) returns (Todo) {
-    option (google.api.http) = {
-      get: "/v1/{name=tenants/*/users/*/todo/*}"
-    };
+    option (google.api.http) = {get: "/v1/{name=tenants/*/users/*/todo/*}"};
     option (google.api.method_signature) = "name";
   }
 
   // List todos.
   // See: https://google.aip.dev/132 (Standard methods: List).
   rpc ListTodos(ListTodosRequest) returns (ListTodosResponse) {
-    option (google.api.http) = {
-      get: "/v1/{parent=tenants/*/users/*}/todos"
-    };
+    option (google.api.http) = {get: "/v1/{parent=tenants/*/users/*}/todos"};
   }
 
   // Create a todo.
