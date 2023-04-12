@@ -19,7 +19,7 @@ export const TenantResourceName: TenantResourceNameConstructor = {
     if (segments[0] !== "tenants") {
       throw new Error(`${errPrefix}: invalid constant segment ${segments[0]} (expected tenants)`)
     }
-    const tenant = segments[1]
+    const tenant = segments[1] ?? ""
     return this.from(tenant)
   },
 
@@ -60,11 +60,11 @@ export const UserResourceName: UserResourceNameConstructor = {
     if (segments[0] !== "tenants") {
       throw new Error(`${errPrefix}: invalid constant segment ${segments[0]} (expected tenants)`)
     }
-    const tenant = segments[1]
+    const tenant = segments[1] ?? ""
     if (segments[2] !== "users") {
       throw new Error(`${errPrefix}: invalid constant segment ${segments[2]} (expected users)`)
     }
-    const user = segments[3]
+    const user = segments[3] ?? ""
     return this.from(tenant, user)
   },
 

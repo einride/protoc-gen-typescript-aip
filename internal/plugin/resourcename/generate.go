@@ -76,7 +76,7 @@ func (r resourceName) generateConstructorParse(f *codegen.File, indent int) {
 
 	for i, segment := range r.pattern.Segments {
 		if segment.Variable {
-			f.P(t(indent+1), "const ", variableSegName(segment.Value), " = segments[", i, "]")
+			f.P(t(indent+1), "const ", variableSegName(segment.Value), " = segments[", i, "] ?? \"\"")
 		} else {
 			isWrongConstSegment := "segments[" + strconv.Itoa(i) + "] !== " + strconv.Quote(segment.Value)
 			wrongConstSegmentErr := "`${errPrefix}: " +
