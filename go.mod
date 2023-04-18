@@ -3,7 +3,7 @@ module go.einride.tech/protoc-gen-typescript-aip
 go 1.19
 
 require (
-	github.com/stoewer/go-strcase v1.2.1
+	github.com/stoewer/go-strcase v1.3.0
 	go.einride.tech/aip v0.43.0
 	google.golang.org/protobuf v1.30.0
 )
