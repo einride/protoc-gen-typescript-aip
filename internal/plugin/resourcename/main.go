@@ -1,24 +1,30 @@
 package resourcename
 
 import (
-	"fmt"
-	"path"
+	"cmp"
+	"slices"
 
 	"go.einride.tech/aip/reflect/aipreflect"
-	"go.einride.tech/aip/reflect/aipregistry"
 	"go.einride.tech/protoc-gen-typescript-aip/internal/codegen"
+	"google.golang.org/genproto/googleapis/api/annotations"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 func GeneratePackage(
 	f *codegen.File,
-	resources []*aipreflect.ResourceDescriptor,
-	registry *aipregistry.Resources,
+	pkg protoreflect.FullName,
+	resources []*annotations.ResourceDescriptor,
+	files *protoregistry.Files,
 ) error {
 	if len(resources) == 0 {
 		return nil
 	}
 
-	pkg := path.Dir(resources[0].ParentFile)
+	packageResources := make(map[string]struct{})
+	for _, resource := range resources {
+		packageResources[resource.GetType()] = struct{}{}
+	}
 
 	// keep track of what resource names have been generated in the package
 	seen := make(map[string]struct{})
@@ -28,35 +34,41 @@ func GeneratePackage(
 		resource := queue[0]
 		queue = queue[1:]
 
-		if _, ok := seen[resource.Type.Type()]; ok {
+		if _, ok := seen[resource.GetType()]; ok {
 			continue
 		}
-		seen[resource.Type.Type()] = struct{}{}
+		seen[resource.GetType()] = struct{}{}
 
-		// no support for multiple resource name definitions
-		name := resource.Names[0]
-
-		ancestors := make([]resourceName, 0, len(name.Ancestors))
-		for _, ancestor := range name.Ancestors {
-			ancestorResource, ok := registry.FindResourceByType(ancestor)
-			if !ok {
-				return fmt.Errorf("unable to find resource type: %s", ancestor)
-			}
-			_ = pkg
+		parents := make([]*annotations.ResourceDescriptor, 0, 16)
+		aipreflect.RangeParentResourcesInPackage(
+			files,
+			pkg,
+			resource.GetPattern()[0],
+			func(parent *annotations.ResourceDescriptor) bool {
+				parents = append(parents, parent)
+				return true
+			},
+		)
+		// iteration order of RangeParentResourcesInPackage is undefined.
+		slices.SortFunc(parents, func(a, b *annotations.ResourceDescriptor) int {
+			return cmp.Compare(b.GetType(), a.GetType())
+		})
+		ancestors := make([]resourceName, 0, 16)
+		for _, parent := range parents {
+			queue = append(queue, parent)
 			ancestors = append(ancestors, resourceName{
-				typeName: ancestor,
-				pattern:  ancestorResource.Names[0].Pattern,
+				typeName: aipreflect.ResourceType(parent.GetType()),
+				pattern:  parent.GetPattern()[0],
 			})
-			queue = append(queue, ancestorResource)
 		}
 
 		// resource declarations "imported" from other packages
 		// should not be re-exported.
-		shouldExport := path.Dir(resource.ParentFile) == pkg
+		_, shouldExport := packageResources[resource.GetType()]
 		resourceName{
 			export:    shouldExport,
-			typeName:  name.Type,
-			pattern:   name.Pattern,
+			typeName:  aipreflect.ResourceType(resource.GetType()),
+			pattern:   resource.GetPattern()[0],
 			ancestors: ancestors,
 		}.Generate(f)
 	}
