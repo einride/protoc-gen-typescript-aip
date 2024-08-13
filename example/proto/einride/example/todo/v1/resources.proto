@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package einride.example.todo.v1;
+
+import "google/api/resource.proto";
+
+option (google.api.resource_definition) = {
+  type: "account-example.einride.tech/Tenant"
+  pattern: "tenants/{tenant}"
+  singular: "tenant"
+  plural: "tenants"
+};
+option (google.api.resource_definition) = {
+  type: "account-example.einride.tech/User"
+  pattern: "tenants/{tenant}/users/{user}"
+  singular: "user"
+  plural: "users"
+};
