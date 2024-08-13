@@ -6,13 +6,14 @@ import (
 	"strings"
 
 	"go.einride.tech/aip/reflect/aipreflect"
+	"go.einride.tech/aip/resourcename"
 	"go.einride.tech/protoc-gen-typescript-aip/internal/codegen"
 )
 
 type resourceName struct {
 	export    bool
-	typeName  aipreflect.ResourceTypeName
-	pattern   aipreflect.ResourceNamePatternDescriptor
+	typeName  aipreflect.ResourceType
+	pattern   string
 	ancestors []resourceName
 }
 
@@ -23,15 +24,18 @@ func (r resourceName) Generate(f *codegen.File) {
 }
 
 func (r resourceName) generateInterface(f *codegen.File) {
-	f.P("// Example: '", r.pattern.String(), "'")
+	f.P("// Example: '", r.pattern, "'")
 	f.P(r.maybeExport(), "interface ", interfaceName(r.typeName), " {")
 
 	// segment accessors
-	for _, seg := range r.pattern.Segments {
-		if !seg.Variable {
+	var sc resourcename.Scanner
+	sc.Init(r.pattern)
+	for sc.Scan() {
+		seg := sc.Segment()
+		if !seg.IsVariable() {
 			continue
 		}
-		f.P(t(1), variableSegName(seg.Value), ": string;")
+		f.P(t(1), variableSegName(seg), ": string;")
 	}
 
 	// ancestor accessors
@@ -66,52 +70,68 @@ func (r resourceName) generateConstructorParse(f *codegen.File, indent int) {
 	f.P(t(indent+1), "const errPrefix = `parse resource name ${s} as ", r.typeName, "`;")
 	f.P(t(indent+1), "const segments = s.split(\"/\")")
 
-	isWrongLen := "segments.length !== " + strconv.Itoa(len(r.pattern.Segments))
+	var segmentCount int
+	var sc resourcename.Scanner
+	sc.Init(r.pattern)
+	for sc.Scan() {
+		segmentCount++
+	}
+
+	isWrongLen := "segments.length !== " + strconv.Itoa(segmentCount)
 	wrongLenErr := "`${errPrefix}: " +
 		"invalid segment count ${segments.length} " +
-		"(expected " + strconv.Itoa(len(r.pattern.Segments)) + ")`"
+		"(expected " + strconv.Itoa(segmentCount) + ")`"
 	f.P(t(indent+1), "if (", isWrongLen, ") {")
 	f.P(t(indent+2), "throw new Error(", wrongLenErr, ")")
 	f.P(t(indent+1), "}")
 
-	for i, segment := range r.pattern.Segments {
-		if segment.Variable {
-			f.P(t(indent+1), "const ", variableSegName(segment.Value), " = segments[", i, "]")
+	sc.Init(r.pattern)
+	var i int
+	for sc.Scan() {
+		segment := sc.Segment()
+		if segment.IsVariable() {
+			f.P(t(indent+1), "const ", variableSegName(segment), " = segments[", i, "]")
 		} else {
-			isWrongConstSegment := "segments[" + strconv.Itoa(i) + "] !== " + strconv.Quote(segment.Value)
+			isWrongConstSegment := "segments[" + strconv.Itoa(i) + "] !== " + strconv.Quote(string(segment))
 			wrongConstSegmentErr := "`${errPrefix}: " +
 				"invalid constant segment ${segments[" + strconv.Itoa(i) + "]} " +
-				"(expected " + segment.Value + ")`"
+				"(expected " + string(segment) + ")`"
 			f.P(t(indent+1), "if (", isWrongConstSegment, ") {")
 			f.P(t(indent+2), "throw new Error(", wrongConstSegmentErr, ")")
 			f.P(t(indent+1), "}")
 		}
+		i++
 	}
 	f.P(t(indent+1), "return this.from(", fromArgs(r.pattern), ")")
 	f.P(t(indent), "},")
 }
 
 func (r resourceName) generateConstructorFrom(f *codegen.File, indent int) {
+	var sc resourcename.Scanner
+	sc.Init(r.pattern)
 	f.P(t(indent+0), "from(", fromArgsDecl(r.pattern), "): ", interfaceName(r.typeName), " {")
-	for _, seg := range r.pattern.Segments {
-		if !seg.Variable {
+	for sc.Scan() {
+		seg := sc.Segment()
+		if !seg.IsVariable() {
 			continue
 		}
-		isEmpty := variableSegName(seg.Value) + " === \"\""
-		containsSlash := variableSegName(seg.Value) + ".indexOf(\"/\") > -1"
-		invalidVariableSegmentErr := "`invalid variable segment for " + seg.Value + ": " +
-			"'${" + variableSegName(seg.Value) + "}'`"
+		isEmpty := variableSegName(seg) + " === \"\""
+		containsSlash := variableSegName(seg) + ".indexOf(\"/\") > -1"
+		invalidVariableSegmentErr := "`invalid variable segment for " + string(seg.Literal()) + ": " +
+			"'${" + variableSegName(seg) + "}'`"
 		f.P(t(indent+1), "if (", isEmpty, " || ", containsSlash, ") {")
 		f.P(t(indent+2), "throw new Error(", invalidVariableSegmentErr, ")")
 		f.P(t(indent+1), "}")
 	}
 	f.P(t(indent+1), "return {")
 	// segment accessors
-	for _, seg := range r.pattern.Segments {
-		if !seg.Variable {
+	sc.Init(r.pattern)
+	for sc.Scan() {
+		seg := sc.Segment()
+		if !seg.IsVariable() {
 			continue
 		}
-		f.P(t(indent+2), variableSegName(seg.Value), ",")
+		f.P(t(indent+2), variableSegName(seg), ",")
 	}
 	// ancestor accessors
 	for _, ancestor := range r.ancestors {
@@ -121,11 +141,13 @@ func (r resourceName) generateConstructorFrom(f *codegen.File, indent int) {
 	}
 	// toString
 	var toStringParts []string
-	for _, seg := range r.pattern.Segments {
-		if seg.Variable {
-			toStringParts = append(toStringParts, variableSegName(seg.Value))
+	sc.Init(r.pattern)
+	for sc.Scan() {
+		seg := sc.Segment()
+		if seg.IsVariable() {
+			toStringParts = append(toStringParts, variableSegName(seg))
 		} else {
-			toStringParts = append(toStringParts, strconv.Quote(seg.Value))
+			toStringParts = append(toStringParts, strconv.Quote(string(seg)))
 		}
 	}
 	f.P(t(indent+2), "toString(): string {")
@@ -143,24 +165,30 @@ func (r resourceName) maybeExport() string {
 	return ""
 }
 
-func fromArgsDecl(pattern aipreflect.ResourceNamePatternDescriptor) string {
-	args := make([]string, 0, len(pattern.Segments))
-	for _, seg := range pattern.Segments {
-		if !seg.Variable {
+func fromArgsDecl(pattern string) string {
+	args := make([]string, 0, 8)
+	var sc resourcename.Scanner
+	sc.Init(pattern)
+	for sc.Scan() {
+		seg := sc.Segment()
+		if !seg.IsVariable() {
 			continue
 		}
-		args = append(args, fmt.Sprintf("%s: string", variableSegName(seg.Value)))
+		args = append(args, fmt.Sprintf("%s: string", variableSegName(seg)))
 	}
 	return strings.Join(args, ", ")
 }
 
-func fromArgs(pattern aipreflect.ResourceNamePatternDescriptor) string {
-	args := make([]string, 0, len(pattern.Segments))
-	for _, seg := range pattern.Segments {
-		if !seg.Variable {
+func fromArgs(pattern string) string {
+	args := make([]string, 0, 8)
+	var sc resourcename.Scanner
+	sc.Init(pattern)
+	for sc.Scan() {
+		seg := sc.Segment()
+		if !seg.IsVariable() {
 			continue
 		}
-		args = append(args, variableSegName(seg.Value))
+		args = append(args, variableSegName(seg))
 	}
 	return strings.Join(args, ", ")
 }
