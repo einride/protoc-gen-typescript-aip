@@ -9,8 +9,7 @@ import (
 	"go.einride.tech/sage/tools/sggo"
 	"go.einride.tech/sage/tools/sggolangcilint"
 	"go.einride.tech/sage/tools/sggoreleaser"
-	"go.einride.tech/sage/tools/sggoreview"
-	"go.einride.tech/sage/tools/sgmarkdownfmt"
+	"go.einride.tech/sage/tools/sgmdformat"
 	"go.einride.tech/sage/tools/sgyamlfmt"
 )
 
@@ -30,7 +29,7 @@ func main() {
 }
 
 func All(ctx context.Context) error {
-	sg.Deps(ctx, ConvcoCheck, GoLint, GoReview, GoTest, FormatMarkdown, FormatYAML)
+	sg.Deps(ctx, ConvcoCheck, GoLint, GoTest, FormatMarkdown, FormatYAML)
 	sg.SerialDeps(ctx, Proto.All, TypescriptLint)
 	sg.SerialDeps(ctx, GoModTidy, GitVerifyNoDiff)
 	return nil
@@ -51,11 +50,6 @@ func GoTest(ctx context.Context) error {
 	return sggo.TestCommand(ctx).Run()
 }
 
-func GoReview(ctx context.Context) error {
-	sg.Logger(ctx).Println("reviewing Go files...")
-	return sggoreview.Command(ctx, "-c", "1", "./...").Run()
-}
-
 func GoLint(ctx context.Context) error {
 	sg.Logger(ctx).Println("linting Go files...")
 	return sggolangcilint.Run(ctx)
@@ -63,7 +57,7 @@ func GoLint(ctx context.Context) error {
 
 func FormatMarkdown(ctx context.Context) error {
 	sg.Logger(ctx).Println("formatting Markdown files...")
-	return sgmarkdownfmt.Command(ctx, "-w", ".").Run()
+	return sgmdformat.Command(ctx).Run()
 }
 
 func ConvcoCheck(ctx context.Context) error {
@@ -94,7 +88,7 @@ func GoReleaser(ctx context.Context, snapshot bool) error {
 	}
 	args := []string{
 		"release",
-		"--rm-dist",
+		"--clean",
 	}
 	if len(sggit.Tags(ctx)) == 0 && !snapshot {
 		sg.Logger(ctx).Printf("no git tag found for %s, forcing snapshot mode", sggit.ShortSHA(ctx))
