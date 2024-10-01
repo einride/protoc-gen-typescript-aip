@@ -86,16 +86,6 @@ go-review: $(sagefile)
 go-test: $(sagefile)
 	@$(sagefile) GoTest
 
-.PHONY: semantic-release
-semantic-release: $(sagefile)
-ifndef repo
-	 $(error missing argument repo="...")
-endif
-ifndef dry
-	 $(error missing argument dry="...")
-endif
-	@$(sagefile) SemanticRelease "$(repo)" "$(dry)"
-
 .PHONY: typescript-lint
 typescript-lint: $(sagefile)
 	@$(sagefile) TypescriptLint
