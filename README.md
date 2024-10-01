@@ -1,7 +1,7 @@
-protoc-gen-typescript-aip
-=========================
+# protoc-gen-typescript-aip
 
-Generates Typescript helpers for Protobuf APIs conforming to [AIP](https://aip.dev).
+Generates Typescript helpers for Protobuf APIs conforming to
+[AIP](https://aip.dev).
 
 ### Install the plugin
 
@@ -9,7 +9,8 @@ Generates Typescript helpers for Protobuf APIs conforming to [AIP](https://aip.d
 go get go.einride.tech/protoc-gen-typescript-aip
 ```
 
-Or download a prebuilt binary from [releases](https://github.com/einride/protoc-gen-typescript-aip/releases).
+Or download a prebuilt binary from
+[releases](https://github.com/einride/protoc-gen-typescript-aip/releases).
 
 ### Invocation
 
@@ -45,14 +46,15 @@ exclude_resource_definitions
                         in the file scope, only on messages. Default: false.
 ```
 
----
+______________________________________________________________________
 
-Features
---------
+## Features
 
 ### Resource names
 
-Generates helpers for working with resource names, based on [ResourceDescriptor](https://github.com/googleapis/googleapis/blob/master/google/api/resource.proto) annotations.
+Generates helpers for working with resource names, based on
+[ResourceDescriptor](https://github.com/googleapis/googleapis/blob/master/google/api/resource.proto)
+annotations.
 
 #### Example
 

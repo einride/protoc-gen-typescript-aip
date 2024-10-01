@@ -17,17 +17,17 @@ import (
 
 func Generate(request *pluginpb.CodeGeneratorRequest) (*pluginpb.CodeGeneratorResponse, error) {
 	var opts Options
-	if err := opts.Unmarshal(request.Parameter); err != nil {
+	if err := opts.Unmarshal(request.GetParameter()); err != nil {
 		return nil, err
 	}
 
 	generate := make(map[string]struct{})
-	for _, f := range request.FileToGenerate {
+	for _, f := range request.GetFileToGenerate() {
 		generate[f] = struct{}{}
 	}
 
 	protoFiles, err := protodesc.NewFiles(&descriptorpb.FileDescriptorSet{
-		File: request.ProtoFile,
+		File: request.GetProtoFile(),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("create proto registry: %w", err)

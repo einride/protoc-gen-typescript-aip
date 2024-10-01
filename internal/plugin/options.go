@@ -28,16 +28,15 @@ func defaultOptions() Options {
 	}
 }
 
-func (o *Options) Unmarshal(s *string) error {
+func (o *Options) Unmarshal(str string) error {
 	defaults := defaultOptions()
 	o.Filename = defaults.Filename
 	o.InsertionPoint = defaults.InsertionPoint
 
 	// no options specified
-	if s == nil {
+	if str == "" {
 		return nil
 	}
-	str := *s
 
 	opts := strings.Split(str, ",")
 	for _, opt := range opts {
