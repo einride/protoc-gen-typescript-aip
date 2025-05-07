@@ -39,6 +39,9 @@ func Generate(request *pluginpb.CodeGeneratorRequest) (*pluginpb.CodeGeneratorRe
 	packageDirs := make(map[protoreflect.FullName]string)
 	seenPackages := make(map[protoreflect.FullName]struct{})
 	protoFiles.RangeFiles(func(file protoreflect.FileDescriptor) bool {
+		if _, ok := generate[file.Path()]; !ok {
+			return true
+		}
 		pkg := file.Package()
 		if _, ok := seenPackages[pkg]; ok {
 			return true
